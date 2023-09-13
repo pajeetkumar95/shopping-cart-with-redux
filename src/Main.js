@@ -1,10 +1,40 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { fetchdata } from './Slice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Main() {
+
+  const dispatch = useDispatch()
+  const data = useSelector((state)=>{
+    return state.shoppingcart
+  })
+
+  useEffect(()=>{
+    dispatch(fetchdata())
+  },[dispatch])
+
+  if(data.isLoading){
+    return "....is Loading"
+  }
+
+  if(data.isError){
+    return "...is Error"
+  }
+
+
   return (
-    <div>
-        <h1>Shopping Cart With Redux</h1>
-    </div>
+    <>
+      {
+        data.products && data.products.map((item , index)=>{
+          return(
+            <div key={index}>
+              <img src={item.image} alt='img'></img>
+              <h1>{item.title}</h1>
+            </div>
+          )
+        })
+      }
+    </>
   )
 }
 
